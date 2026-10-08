@@ -1,0 +1,87 @@
+name: Build DDNet Laser Assist
+​
+on:
+  workflow_dispatch:
+​
+permissions:
+  contents: read
+​
+jobs:
+  windows:
+    runs-on: windows-2022
+    timeout-minutes: 60
+    steps:
+      - name: Get official DDNet 20.1 source
+        uses: actions/checkout@v4
+        with:
+          repository: ddnet/ddnet
+          ref: '20.1'
+          submodules: recursive
+          persist-credentials: false
+          path: ddnet
+​
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+​
+      - name: Apply embedded laser assist patch
+        working-directory: ddnet
+        shell: python
+        run: |
+          import base64, zlib, subprocess
+          payload = "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"
+          patch = zlib.decompress(base64.b64decode(payload))
+          subprocess.run(["git", "apply", "--check", "--whitespace=nowarn", "-"], input=patch, check=True)
+          subprocess.run(["git", "apply", "--whitespace=nowarn", "-"], input=patch, check=True)
+          print("Patched official DDNet 20.1. Assist is disabled by default.")
+​
+      - name: Select MSVC Rust toolchain
+        shell: pwsh
+        run: |
+          rustup toolchain install stable-x86_64-pc-windows-msvc --profile minimal
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          rustup default stable-x86_64-pc-windows-msvc
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+​
+      - name: Configure Windows x64 client
+        shell: pwsh
+        run: >-
+          cmake -S ddnet -B build -G "Visual Studio 17 2022" -A x64
+          -DCMAKE_POLICY_VERSION_MINIMUM=3.5
+          -DCMAKE_BUILD_TYPE=Release
+          -DCMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE=.
+          -DCLIENT=ON -DSERVER=ON -DTOOLS=OFF
+          -DPREFER_BUNDLED_LIBS=ON -DDOWNLOAD_GTEST=OFF
+          -DVULKAN=OFF -DVIDEORECORDER=OFF -DEXCEPTION_HANDLING=ON
+​
+      - name: Build and package
+        shell: pwsh
+        run: cmake --build build --config Release --target package_default --parallel 4
+​
+      - name: Prepare download
+        shell: pwsh
+        run: |
+          $archive = Get-ChildItem build -Filter "*-win64.zip" | Select-Object -First 1
+          if (-not $archive) { throw "Windows client package was not generated" }
+          Expand-Archive -Path $archive.FullName -DestinationPath upload
+          @'
+          Experimental DDNet 20.1 Laser Assist for Windows x64.
+          Assist is disabled by default. F1: cl_laser_auto_unfreeze 1
+          Toggle: bind h "toggle cl_laser_auto_unfreeze 0 1"
+          Equip rifle. Manual fire, hook, deep/live freeze and special dummy modes take priority.
+          It shoots BEFORE entering freeze; it cannot shoot while already frozen.
+          Requires prediction. Future input changes and latency can invalidate the shot.
+          Use only on local servers or servers that permit automated assistance.
+          This is a prediction-based prototype, not a guarantee of unfreezing.
+          Keep DDNet.exe with data and DLLs. Do not replace your Steam installation.
+          '@ | Set-Content upload/README-LaserAssist.txt
+​
+      - name: Upload Windows client
+        uses: actions/upload-artifact@v4
+        with:
+          name: DDNet-LaserAssist-win64
+          path: upload/
+          if-no-files-found: error
+          retention-days: 14
+​
